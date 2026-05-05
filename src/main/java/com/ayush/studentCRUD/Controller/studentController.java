@@ -3,6 +3,7 @@ package com.ayush.studentCRUD.Controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,13 +37,23 @@ public class studentController {
     }
 
     @GetMapping("/getstudent")
-    public List<student> getAllStudent() {
-        return studentService.getAllStudent();
+    public ResponseEntity< List<student>> getAllStudent() {
+
+         List<student> stu= studentService.getAllStudent();
+
+        return ResponseEntity.ok()
+        .header("customHeader", "hello")
+        .body(stu);
     }
 
     @GetMapping("/getstudent/{id}")
-    public student getStudentById(@PathVariable int id) {
-        return studentService.getStudentById(id);
+    public ResponseEntity<student> getStudentById(@PathVariable int id) {
+        student student = studentService.getStudentById(id);
+        if (student != null) {
+            return ResponseEntity.ok(student);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PutMapping("/updatestudent/{id}")
